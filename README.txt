@@ -44,7 +44,7 @@
 
     h. Melakukan deployment ke pws dengan menambahkan "khoirul-azmi-tokoazmi.pbp.cs.ui.ac.id" pada settings.py melalui create project di PWS.
     kemudian melakukan command berikut pada terminal:
-    - git remote add pws http://pbp.cs.ui.ac.id/khoirul.azmi/tokopakcil
+    - git remote add pws http://pbp.cs.ui.ac.id/khoirul.azmi/tokoazmi
     - git branch -M master
     - git push pws master
 
