@@ -53,6 +53,16 @@
 
 2. Buatlah bagan yang berisi request client ke web aplikasi berbasis Django beserta responnya dan jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html.
 
+            -->   URL  ----->|     
+    client |                  --- > Views <---> Model <---> Database
+            <--   Template <--|
+
+            Ketika client mengirimkan request, URL menentukan jalur yang sesuai dan memilih fungsi di views untuk memproses permintaan tersebut. Jika diperlukan, views akan berinteraksi 
+            dengan model untuk mengambil data dari database. Setelah data diperoleh, views mengirimkan data tersebut ke template untuk dirender menjadi halaman HTML. Akhirnya, halaman yang 
+            telah dirender dikirim kembali ke client sebagai response berupa halaman web yang dapat ditampilkan di browser.
+
+
+
 3. Jelaskan fungsi git dalam pengembangan perangkat lunak!
     
     Git berfungsi sebagai sistem kontrol versi yang sangat penting dalam pengembangan perangkat lunak karena memungkinkan tim pengembang untuk:
