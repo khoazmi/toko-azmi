@@ -1,6 +1,8 @@
 from django.db import models
 
 class Product(models.Model):
-    name = models.CharField(max_length=255)
+    nama_siswa = models.CharField(max_length=50)
+    kelas_siswa = models.CharField(max_length=50)
+    name_product = models.CharField(max_length=50)
     price = models.IntegerField()
-    description = models.TextField()
+    description = models.TextField(max_length=400)
