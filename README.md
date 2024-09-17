@@ -102,7 +102,7 @@ JAWABAN TUGAS 3
     Tergantung kebutuhan. Untuk JSON lebih populer dari XML karena lebih ringan, mudah diparsing oleh JavaScript, lebih ringkas, dan lebih mudah dibaca. JSON lebih efisien untuk aplikasi web modern, sementara 
     XML lebih cocok untuk data kompleks.
 
-3. Jelaskan fungsi dari method `is_valid()` pada form Django dan mengapa kita membutuhkan method tersebut?
+3. Jelaskan fungsi dari method is_valid() pada form Django dan mengapa kita membutuhkan method tersebut?;
     is_valid() di Django memvalidasi input form. Jika valid, data disimpan di cleaned_data. Ini penting untuk mencegah kesalahan dan masalah keamanan dari data input yang tidak valid.
 
 4. Mengapa kita membutuhkan csrf_token saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan csrf_token pada form Django? Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang?
