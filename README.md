@@ -55,13 +55,9 @@ JAWABAN TUGAS 2
 
 2. Buatlah bagan yang berisi request client ke web aplikasi berbasis Django beserta responnya dan jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html.
 
-            -->   URL  ----->|     
-    client |                  --- > Views <---> Model <---> Database
-            <--   Template <--|
+![Dijango server flow](https://github.com/user-attachments/assets/e7043796-f481-4e38-8898-40cc0d322658)
 
-            Ketika client mengirimkan request, URL menentukan jalur yang sesuai dan memilih fungsi di views untuk memproses permintaan tersebut. Jika diperlukan, views akan berinteraksi 
-            dengan model untuk mengambil data dari database. Setelah data diperoleh, views mengirimkan data tersebut ke template untuk dirender menjadi halaman HTML. Akhirnya, halaman yang 
-            telah dirender dikirim kembali ke client sebagai response berupa halaman web yang dapat ditampilkan di browser.
+Ketika client mengirimkan request, URL menentukan jalur yang sesuai dan memilih fungsi di views untuk memproses permintaan tersebut. Jika diperlukan, views akan berinteraksi dengan model untuk mengambil data dari database. Setelah data diperoleh, views mengirimkan data tersebut ke template untuk dirender menjadi halaman HTML. Akhirnya, halaman yang telah dirender dikirim kembali ke client sebagai response berupa halaman web yang dapat ditampilkan di browser.
 
 
 
@@ -83,38 +79,34 @@ JAWABAN TUGAS 2
         dapat dipulihkan dengan mudah.
 
 4. Menurut Anda, dari semua framework yang ada, mengapa framework Django dijadikan permulaan pembelajaran pengembangan perangkat lunak?
-    Menggunakan Django memungkinkan pengembang untuk menerapkan pola Model-View-Template (MVT), yang memberikan struktur yang jelas dan memudahkan dalam pengembangan aplikasi web. Django juga 
-    dilengkapi dengan berbagai fitur bawaan, seperti sistem autentikasi, pengelolaan URL, dan ORM untuk basis data, sehingga mengurangi kebutuhan integrasi library eksternal. Selain itu, Django 
-    terkenal dengan dokumentasinya yang lengkap dan keamanan yang terjamin, menjadikannya pilihan yang optimal bagi pengembang, baik pemula maupun profesional, untuk membangun aplikasi yang aman, 
-    efisien, dan terstruktur dengan baik. Keunggulan-keunggulan ini membuat Django tidak hanya memudahkan, tetapi juga meningkatkan produktivitas pengembang dalam menciptakan aplikasi berkualitas 
-    tinggi.
+    Menggunakan Django memungkinkan pengembang untuk menerapkan pola Model-View-Template (MVT), yang memberikan struktur yang jelas dan memudahkan dalam pengembangan aplikasi web. Django juga dilengkapi dengan berbagai fitur bawaan, seperti sistem autentikasi, pengelolaan URL, dan ORM untuk basis data, sehingga mengurangi kebutuhan integrasi library eksternal. Selain itu, Django terkenal dengan dokumentasinya yang lengkap dan keamanan yang terjamin, menjadikannya pilihan yang optimal bagi pengembang, baik pemula maupun profesional, untuk membangun aplikasi yang aman, efisien, dan terstruktur dengan baik. Keunggulan-keunggulan ini membuat Django tidak hanya memudahkan, tetapi juga meningkatkan produktivitas pengembang dalam menciptakan aplikasi berkualitas tinggi.
 
-5. Mengapa model pada Django disebut sebagai ORM?
-    Model pada Django disebut sebagai ORM (Object-Relational Mapping) karena memungkinkan pengembang berinteraksi dengan basis data melalui objek dan kelas Python tanpa menulis SQL secara langsung. 
-    ORM menerjemahkan operasi pada objek model ke perintah SQL, mempermudah operasi CRUD, dan mendukung berbagai jenis basis data. Django ORM juga menyederhanakan pengelolaan relasi antar tabel seperti 
-    one-to-one, one-to-many, dan many-to-many, sehingga pengelolaan data lebih intuitif dan portabel.
+5. Mengapa model pada Django disebut sebagai ORM? Model pada Django disebut sebagai ORM (Object-Relational Mapping) karena memungkinkan pengembang berinteraksi dengan basis data melalui objek dan kelas Python tanpa menulis SQL secara langsung. ORM menerjemahkan operasi pada objek model ke perintah SQL, mempermudah operasi CRUD, dan mendukung berbagai jenis basis data. Django ORM juga menyederhanakan pengelolaan relasi antar tabel seperti one-to-one, one-to-many, dan many-to-many, sehingga pengelolaan data lebih intuitif dan portabel.
 
 JAWABAN TUGAS 3
 1. Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
     Data delivery penting dalam platform untuk memastikan pertukaran data antara server dan klien berjalan lancar, aman, dan efisien, serta memungkinkan interaksi pengguna dengan data secara real-time.
 
 2. Menurutmu, mana yang lebih baik antara XML dan JSON? Mengapa JSON lebih populer dibandingkan XML?
-    Tergantung kebutuhan. Untuk JSON lebih populer dari XML karena lebih ringan, mudah diparsing oleh JavaScript, lebih ringkas, dan lebih mudah dibaca. JSON lebih efisien untuk aplikasi web modern, sementara 
-    XML lebih cocok untuk data kompleks.
+    Tergantung kebutuhan. Untuk JSON lebih populer dari XML karena lebih ringan, mudah diparsing oleh JavaScript, lebih ringkas, dan lebih mudah dibaca. JSON lebih efisien untuk aplikasi web modern, sementara XML lebih cocok untuk data kompleks.
 
-3. Jelaskan fungsi dari method is_valid() pada form Django dan mengapa kita membutuhkan method tersebut?;
-    is_valid() di Django memvalidasi input form. Jika valid, data disimpan di cleaned_data. Ini penting untuk mencegah kesalahan dan masalah keamanan dari data input yang tidak valid.
+3. Jelaskan fungsi dari method is_valid() pada form Django dan mengapa kita membutuhkan method tersebut? is_valid() di Django memvalidasi input form. Jika valid, data disimpan di cleaned_data. Ini penting untuk mencegah kesalahan dan masalah keamanan dari data input yang tidak valid.
 
-4. Mengapa kita membutuhkan csrf_token saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan csrf_token pada form Django? Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang?
-    csrf_token melindungi dari serangan CSRF. Tanpa token ini, penyerang bisa mengirim permintaan palsu atas nama pengguna, misalnya melakukan perubahan data tanpa izin.
+4. Mengapa kita membutuhkan csrf_token saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan csrf_token pada form Django? Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang? csrf_token melindungi dari serangan CSRF. Tanpa token ini, penyerang bisa mengirim permintaan palsu atas nama pengguna, misalnya melakukan perubahan data tanpa izin.
 
 5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
-    a. Tambahkan model Product berisi nama, harga, dan deskripsi di models.py, lalu buat form Product dengan fieldsnya berissi nama, harga, dan deskripsi di forms.py untuk menangani input dari pengguna. 
-    Setelah itu, tambahkan view create_product di views.py untuk menyimpan data yang diinput melalui form, dan buat template create_product.html untuk menampilkan form tersebut di halaman web.
-    b. pada views.py, buat view show_json untuk menampilkan semua objek dalam format JSON dan show_xml untuk menampilkan semua objek dalam format XML. Tambahkan juga path show_json_by_id dan show_xml_by_id 
-    untuk menampilkan objek berdasarkan ID dalam format JSON dan XML.
-    c. Di urls.py pada direktori main, tambahkan routing URL untuk setiap view yang sudah dibuat, yaitu create_product, show_json, show_xml, show_json_by_id, dan show_xml_by_id, sehingga pengguna dapat mengakses
-    form input dan melihat data dalam format JSON atau XML.
+   a. Tambahkan model Product berisi nama, harga, dan deskripsi di models.py, lalu buat form Product dengan fieldsnya berissi nama, harga, dan deskripsi di forms.py untuk menangani input dari pengguna. Setelah itu, tambahkan view create_product di views.py untuk menyimpan data yang diinput melalui form, dan buat template create_product.html untuk menampilkan form tersebut di halaman web.
+    b. pada views.py, buat view show_json untuk menampilkan semua objek dalam format JSON dan show_xml untuk menampilkan semua objek dalam format XML. Tambahkan juga path show_json_by_id dan show_xml_by_id untuk menampilkan objek berdasarkan ID dalam format JSON dan XML.
+    c. Di urls.py pada direktori main, tambahkan routing URL untuk setiap view yang sudah dibuat, yaitu create_product, show_json, show_xml, show_json_by_id, dan show_xml_by_id, sehingga pengguna dapat mengakses form input dan melihat data dalam format JSON atau XML.
+
+6. Screenshot Postman
+   
+![Screenshot (2009)](https://github.com/user-attachments/assets/73f35cb6-7814-40ba-9c79-12b2022233dd)
+![Screenshot (2008)](https://github.com/user-attachments/assets/23656997-1a9f-4397-afaf-51bee5375529)
+![Screenshot (2011)](https://github.com/user-attachments/assets/084a2b02-8871-4bf4-a36d-5fd1bbea0833)
+![Screenshot (2010)](https://github.com/user-attachments/assets/ee0fdcac-7f2c-490e-9106-3719edd5700f)
+
+   
 
 JAWABAN TUGAS 4
 1. Apa perbedaan antara HttpResponseRedirect dan redirect
