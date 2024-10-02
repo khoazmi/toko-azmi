@@ -244,7 +244,234 @@ JAWABAN TUGAS 4
 
    - **Menambahkan Data Dummy**: Setelah membuat dua akun pengguna, saya menggunakan `python manage.py runserver` untuk menambahkan data dummy untuk setiap pengguna di lokal.
 
+JAWABAN TUGAS 5
 
+### 1. Urutan Prioritas CSS Selector
+
+CSS menggunakan aturan tertentu untuk menentukan prioritas (atau spesifisitas) dari selector. Urutan prioritas adalah sebagai berikut:
+
+1. **Inline CSS**: CSS yang dituliskan langsung di dalam elemen HTML menggunakan atribut `style`.
+   ```html
+   <div style="color: red;">Hello</div>
+   ```
+
+2. **ID Selector**: Selector yang menggunakan ID, ditandai dengan `#`.
+   ```css
+   #myElement {
+       color: blue;
+   }
+   ```
+
+3. **Class Selector dan Attribute Selector**: Selector yang menggunakan kelas (dengan `.`) atau atribut (dengan `[attribute]`).
+   ```css
+   .myClass {
+       color: green;
+   }
+   ```
+
+4. **Element Selector**: Selector yang menggunakan nama elemen HTML.
+   ```css
+   div {
+       color: yellow;
+   }
+   ```
+
+5. **Universal Selector**: Selector yang menggunakan asterisk (`*`), yang berlaku untuk semua elemen.
+   ```css
+   * {
+       color: black;
+   }
+   ```
+
+Jika dua atau lebih selector memiliki spesifisitas yang sama, urutan kemunculan dalam stylesheet akan menentukan yang mana yang diterapkan, di mana yang terakhir di-definisikan akan menang.
+
+### 2. Pentingnya Responsive Design
+
+Responsive design adalah pendekatan yang memungkinkan aplikasi web beradaptasi dengan berbagai ukuran layar dan perangkat, memberikan pengalaman pengguna yang optimal. Ini penting karena:
+
+- **Pengalaman Pengguna**: Pengguna mengakses web melalui berbagai perangkat (desktop, tablet, smartphone). Desain responsif memastikan konten terlihat baik di semua perangkat.
+- **SEO**: Google lebih menyukai situs web yang responsif, sehingga membantu meningkatkan peringkat di mesin pencari.
+- **Biaya**: Mengembangkan satu situs responsif lebih efisien daripada membuat versi terpisah untuk perangkat berbeda.
+
+**Contoh Aplikasi**:
+- **Sudah menerapkan responsive design**: Facebook, Instagram.
+- **Belum menerapkan responsive design**: Beberapa situs web lama atau berbasis Flash yang tidak responsif.
+
+### 3. Margin, Border, dan Padding
+
+- **Margin**: Ruang di luar batas elemen. Margin dapat digunakan untuk mengatur jarak antara elemen.
+  ```css
+  .myElement {
+      margin: 10px;
+  }
+  ```
+
+- **Border**: Garis yang mengelilingi elemen, dapat disesuaikan dengan ketebalan, gaya, dan warna.
+  ```css
+  .myElement {
+      border: 1px solid black;
+  }
+  ```
+
+- **Padding**: Ruang di dalam batas elemen, antara konten dan border.
+  ```css
+  .myElement {
+      padding: 10px;
+  }
+  ```
+
+### 4. Konsep Flexbox dan Grid Layout
+
+- **Flexbox**: Merupakan model layout satu dimensi yang digunakan untuk mendistribusikan ruang di antara elemen dalam satu arah (horizontal atau vertikal). Kegunaannya termasuk memusatkan konten, meratakan elemen, dan mengatur elemen responsif.
+  ```css
+  .container {
+      display: flex;
+      justify-content: center; /* mengatur posisi horizontal */
+      align-items: center; /* mengatur posisi vertikal */
+  }
+  ```
+
+- **Grid Layout**: Model layout dua dimensi yang memungkinkan penataan elemen dalam baris dan kolom. Ini ideal untuk tata letak yang kompleks.
+  ```css
+  .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* tiga kolom */
+  }
+  ```
+
+### 5. Implementasi Checklist
+
+
+1. **Menambahakn kode untuk Taulwind ke `base.html`**:
+    <head>
+    {% load static %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {% block meta %} {% endblock meta %}
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
+    </head>
+    <body>
+        {% block content %} {% endblock content %}
+    </body>
+    </html>
+
+2. **Membuat Lodic untuk delete dan edit product pada `views.py`**:
+    ```python
+   def edit_product(request, id):
+    # Get product entry berdasarkan id
+    product = Product.objects.get(pk = id)
+
+    # Set product entry sebagai instance dari form
+    form = ProductForm(request.POST or None, instance=product)
+
+    if form.is_valid() and request.method == "POST":
+        # Simpan form dan kembali ke halaman awal
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_product.html", context)
+
+    def delete_product(request, id):
+        # Get mood berdasarkan id
+        aproduct = Product.objects.get(pk = id)
+        # Hapus mood
+        aproduct.delete()
+        # Kembali ke halaman awal
+        return HttpResponseRedirect(reverse('main:show_main'))
+    ```
+
+3. **Membuat html untuk menghandle edit product**:
+   ```html
+    {% extends 'base.html' %}
+    {% load static %}
+    {% block meta %}
+    <title>Edit Product</title>
+    {% endblock meta %}
+
+    {% block content %}
+    {% include 'navbar.html' %}
+    <div class="flex flex-col min-h-screen bg-gray-100">
+    <div class="container mx-auto px-4 py-8 mt-16 max-w-xl">
+        <h1 class="text-3xl font-bold text-center mb-8 text-black">Edit Product</h1>
+    
+        <div class="bg-white rounded-lg p-6 form-style">
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="flex flex-col">
+                    <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-gray-700">
+                        {{ field.label }}
+                    </label>
+                    <div class="w-full">
+                        {{ field }}
+                    </div>
+                    {% if field.help_text %}
+                        <p class="mt-1 text-sm text-gray-500">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <div class="flex justify-center mt-6">
+                <button type="submit" class="bg-indigo-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-indigo-700 transition duration-300 ease-in-out w-full">
+                    Edit Product
+                </button>
+            </div>
+        </form>
+    </div>
+    </div>
+    </div>
+    {% endblock %}
+   ```
+
+4. **Menambahkan file CSS dan mendesain ulang masing masing html untuk menggunakan Tailwind agar tampilannya lebih bagus**:
+
+- Menambahkan `global.css` dengan direktori static/css
+   - Gunakan media queries untuk menyesuaikan layout agar responsif. Misalnya, mengubah kolom menjadi satu pada layar kecil.
+   ```css
+    .form-style form input, form textarea, form select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 2px solid #bcbcbc;
+        border-radius: 0.375rem;
+    }
+    .form-style form input:focus, form textarea:focus, form select:focus {
+        outline: none;
+        border-color: #674ea7;
+        box-shadow: 0 0 0 3px #674ea7;
+    }
+    @keyframes shine {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+    .animate-shine {
+        background: linear-gradient(120deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.3));
+        background-size: 200% 100%;
+        animation: shine 3s infinite;
+    }
+   ```
+
+    Setelah itu mendesain ulang: 
+    - `main.html`
+    - `login.html`
+    - `create_product.html`
+    - `register.html`
+
+5. **Menambahakn beberapa html baru**:
+   - `card_info.html`
+   - `card_product.html`
+   - `navbar.html`
+
+        
+
+6. **Testing dan perbaikan kode**:
+   Melakukan test dan memperbaiki kode yang cacat
 
 
 

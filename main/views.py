@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.core import serializers
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from main.forms import ProductForm
 from main.models import Product
 from django.contrib.auth.forms import UserCreationForm
@@ -25,14 +25,14 @@ def create_product(request):
     context = {'form': form}
     return render(request, "create_product.html", context)
 
-@login_required(login_url='/login')
+@login_required(login_url='/login') #ga perlu dibuat karena ada defaultnya
 def show_main(request):
-    create_product = Product.objects.filter(user=request.user)
+    products = Product.objects.filter(user=request.user)
     context = {
         'nama_siswa' : request.user.username,
         'kelas_siswa' : 'PBP C',
         'npm_siswa' : '2306245812',
-        'create_product' : create_product,
+        'products' : products,
         'last_login': request.COOKIES['last_login'],
     }
 
@@ -65,6 +65,29 @@ def login_user(request):
       form = AuthenticationForm(request)
    context = {'form': form}
    return render(request, 'login.html', context)
+
+def edit_product(request, id):
+    # Get product entry berdasarkan id
+    product = Product.objects.get(pk = id)
+
+    # Set product entry sebagai instance dari form
+    form = ProductForm(request.POST or None, instance=product)
+
+    if form.is_valid() and request.method == "POST":
+        # Simpan form dan kembali ke halaman awal
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_product.html", context)
+
+def delete_product(request, id):
+    # Get mood berdasarkan id
+    aproduct = Product.objects.get(pk = id)
+    # Hapus mood
+    aproduct.delete()
+    # Kembali ke halaman awal
+    return HttpResponseRedirect(reverse('main:show_main'))
 
 def logout_user(request):
     logout(request)
