@@ -473,6 +473,187 @@ Responsive design adalah pendekatan yang memungkinkan aplikasi web beradaptasi d
 6. **Testing dan perbaikan kode**:
    Melakukan test dan memperbaiki kode yang cacat
 
+JAWABAN TUGAS 6
+
+1. **Manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web:**
+
+    a. Interaktivitas Dinamis: JavaScript memungkinkan halaman web menjadi lebih interaktif dengan merespons aksi pengguna secara langsung tanpa perlu me-reload seluruh halaman. Ini termasuk hal-hal seperti validasi form secara real-time, update konten, atau menampilkan notifikasi.
+
+    b. Pengolahan Asinkron: JavaScript dapat berkomunikasi dengan server menggunakan teknik asinkron seperti AJAX dan Fetch API. Ini memungkinkan pengiriman dan pengambilan data tanpa harus memuat ulang halaman, sehingga meningkatkan performa dan pengalaman pengguna.
+
+    c. Penggunaan di Client-Side dan Server-Side: Selain di client-side, JavaScript juga digunakan di server-side dengan Node.js. Ini memungkinkan developer menggunakan bahasa yang sama di kedua sisi aplikasi, yang dapat meningkatkan efisiensi pengembangan.
+
+    d. Integrasi dengan HTML dan CSS: JavaScript dapat memodifikasi HTML dan CSS secara langsung. Ini membuatnya sangat fleksibel dalam hal manipulasi DOM, memungkinkan developer mengubah tampilan halaman tanpa harus membuat ulang halaman tersebut.
+
+2. **Fungsi dari penggunaan `await` pada `fetch()`**:
+
+    `await` digunakan untuk menunggu hasil dari fungsi asynchronous seperti `fetch()`. Fungsi `fetch()` akan mengembalikan **Promise** yang berisi response dari server, dan `await` digunakan agar JavaScript berhenti eksekusi hingga Promise tersebut resolved atau rejected.
+
+    Contoh:
+    ```javascript
+    const response = await fetch(url);
+    ```
+    Jika kita **tidak menggunakan `await`**, program akan melanjutkan eksekusi ke baris berikutnya tanpa menunggu respons dari server. Hal ini bisa menyebabkan kita mencoba mengakses data sebelum respons tersedia, yang akan menimbulkan error atau hasil yang tidak diinginkan (misalnya, data masih belum ada saat kita mencoba memprosesnya).
+
+
+3. **Mengapa perlu menggunakan `@csrf_exempt` pada view yang digunakan untuk AJAX POST?**
+
+    CSRF (Cross-Site Request Forgery) adalah jenis serangan di mana penyerang mencoba membuat pengguna yang sudah terautentikasi melakukan permintaan tanpa sepengetahuannya. Django memiliki mekanisme CSRF token yang mencegah hal ini dengan memastikan setiap request POST berisi token CSRF yang valid.
+
+    Namun, ketika menggunakan AJAX untuk melakukan POST request, terutama dari client yang tidak dikonfigurasi untuk mengirimkan token CSRF, request tersebut akan gagal jika token tidak disertakan. Oleh karena itu, decorator `@csrf_exempt` digunakan pada view yang mengizinkan AJAX POST tanpa memeriksa CSRF token. Ini membuat request dapat diproses tanpa error meskipun token CSRF tidak disertakan.
+
+    Catatan: Ini harus digunakan dengan hati-hati karena dapat membuka celah keamanan jika tidak dikombinasikan dengan langkah pengamanan lainnya.
+
+4. **Mengapa pembersihan data input pengguna tidak dilakukan di frontend saja?**
+
+    Meskipun validasi di frontend penting untuk memberikan umpan balik cepat ke pengguna, **pembersihan dan validasi di backend tetap sangat penting** untuk alasan berikut:
+
+    a. **Keamanan**: Pengguna dapat mematikan JavaScript atau mengubah kode frontend (misalnya melalui Developer Tools di browser), yang dapat menyebabkan data tidak divalidasi sebelum dikirim ke server. Oleh karena itu, backend harus memvalidasi input untuk melindungi dari serangan seperti SQL Injection, XSS, dan lainnya.
+
+    b. **Kepastian Data yang Konsisten**: Backend adalah sumber kebenaran terakhir untuk data. Jika validasi dan pembersihan hanya dilakukan di frontend, data yang tidak valid bisa saja lolos ke server, merusak integritas data.
+
+    c. **Skalabilitas**: Dalam aplikasi yang besar, memiliki validasi dan pembersihan hanya di frontend tidak cukup kuat. Dengan memvalidasi di backend, kita memastikan data yang masuk ke sistem selalu dalam format yang benar dan aman.
+
+
+5. **Langkah-langkah Implementasi Checklist:**
+    Berikut adalah penjelasan bagaimana kode yang kamu kirimkan mengimplementasikan checklist AJAX GET dan POST untuk aplikasi yang kamu buat:
+
+    ### **1. AJAX GET untuk Pengambilan Data Produk**
+    Checklist pertama adalah melakukan pengambilan data produk milik pengguna yang login menggunakan AJAX GET, dan menampilkan produk tersebut pada halaman utama. Implementasinya pada kode yang kamu kirimkan adalah sebagai berikut:
+
+    - **View `show_json()`**:
+    - Fungsi ini mengambil data produk dari database yang dimiliki oleh pengguna yang sedang login.
+    - Produk difilter dengan query `Product.objects.filter(user=request.user)`, yang memastikan hanya produk milik pengguna login yang diambil.
+    - Data ini kemudian dikembalikan dalam format JSON menggunakan `serializers.serialize("json", data)` dan direspons dengan `HttpResponse` yang mengandung data JSON tersebut.
+
+        ```python
+        def show_json(request):
+            data = Product.objects.filter(user=request.user)
+            return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+        ```
+
+    - **AJAX GET di JavaScript**:
+    - Di dalam `main.html`, kamu sudah membuat fungsi `getProducts()` yang mengirim request GET ke URL `/json/`, yang memanggil view `show_json()` dan mengembalikan data produk dalam format JSON.
+    - Fungsi `refreshProducts()` memanggil `getProducts()` dan kemudian meng-update bagian `product_cards` di HTML dengan produk yang diterima dari respons server.
+
+        ```javascript
+        async function getProducts(){
+            return fetch("{% url 'main:show_json' %}").then((res) => res.json())
+        }
+
+        async function refreshProducts() {
+            const products = await getProducts();
+            let htmlString = "";
+            if (products.length === 0) {
+                htmlString = `
+                    <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+                        <p class="text-center text-gray-600 mt-4">Belum ada data produk pada mental health tracker.</p>
+                    </div>
+                `;
+            } else {
+                products.forEach((item) => {
+                    const product = DOMPurify.sanitize(item.fields.product);
+                    const description = DOMPurify.sanitize(item.fields.description);
+                    htmlString += `
+                        <div class="product-card">
+                            <h3>${product}</h3>
+                            <p>${description}</p>
+                            <p>${item.fields.price}</p>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById("product_cards").innerHTML = htmlString;
+        }
+
+        // Panggil fungsi refreshProducts untuk mengambil data saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', refreshProducts);
+        ```
+
+    - Ketika halaman dimuat, fungsi `refreshProducts()` akan dipanggil untuk mengisi `div#product_cards` dengan daftar produk.
+
+    ### **2. AJAX POST untuk Menambahkan Produk**
+    Checklist berikutnya adalah menambahkan produk baru melalui AJAX POST, dan berikut cara implementasinya:
+
+    - **View `add_product_ajax()`**:
+    - Fungsi ini menangani permintaan POST untuk menambahkan produk baru. Data produk diambil dari request POST (product, description, dan price), lalu dimasukkan ke database setelah pembersihan menggunakan `strip_tags()` untuk memastikan tidak ada konten berbahaya seperti XSS.
+    - Produk baru kemudian disimpan ke database dengan model `Product` yang sudah terhubung dengan user yang sedang login.
+    - Fungsi ini juga memiliki decorator `@csrf_exempt` agar AJAX POST dapat dilakukan tanpa CSRF token, tetapi ini harus digunakan dengan hati-hati karena berpotensi membuka celah keamanan.
+
+        ```python
+        @csrf_exempt
+        @require_POST
+        def add_product_ajax(request):
+            product = strip_tags(request.POST.get("product"))
+            description = strip_tags(request.POST.get("description"))
+            price = request.POST.get("price")
+            user = request.user
+
+            new_product = Product(
+                product=product, description=description,
+                price=price,
+                user=user
+            )
+            new_product.save()
+
+            return HttpResponse(b"CREATED", status=201)
+        ```
+
+    - **AJAX POST di JavaScript**:
+    - Pada modal form di `main.html`, terdapat form untuk menambahkan produk baru. Ketika tombol "Save" ditekan, fungsi `addProduct()` dipanggil.
+    - Fungsi ini mengirimkan POST request ke URL `/create-product-ajax/` dengan data form yang diambil menggunakan `FormData()`.
+    - Setelah produk berhasil ditambahkan (request berhasil), halaman di-refresh secara asinkron dengan memanggil `refreshProducts()` untuk memperbarui daftar produk tanpa memuat ulang seluruh halaman. Modal juga ditutup dan form dibersihkan.
+
+        ```javascript
+        function addProduct() {
+            fetch("{% url 'main:add_product_ajax' %}", {
+                method: "POST",
+                body: new FormData(document.querySelector('#productForm')),
+            })
+            .then(response => {
+                if (response.ok) {
+                    refreshProducts(); // Refresh produk jika berhasil
+                } else {
+                    alert('Error adding product');
+                }
+            });
+
+            document.getElementById("productForm").reset(); // Bersihkan form
+            hideModal(); // Tutup modal
+            return false; // Cegah form submit default
+        }
+
+        document.getElementById("submitProduct").onclick = addProduct;
+        ```
+
+    - **Modal untuk Form**:
+    - Modal dibuka menggunakan tombol "Add New Product by AJAX", dan ketika form dikirimkan, modal akan ditutup dengan fungsi `hideModal()`, serta form direset menggunakan `reset()` untuk membersihkan input yang sudah diisi.
+
+        ```javascript
+        function showModal() {
+            modal.classList.remove('hidden');
+        }
+
+        function hideModal() {
+            modalContent.classList.remove('opacity-100', 'scale-100');
+            modalContent.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150); 
+        }
+
+        document.getElementById("cancelButton").addEventListener("click", hideModal);
+        document.getElementById("closeModalBtn").addEventListener("click", hideModal);
+        ```
+
+    ### **3. Refresh Halaman secara Asinkron**
+    Setelah berhasil menambahkan produk, kamu sudah menerapkan mekanisme untuk melakukan refresh daftar produk secara asinkron. Ini dilakukan dengan memanggil kembali `refreshProducts()` setelah produk baru ditambahkan, tanpa melakukan reload penuh pada halaman. Jadi, pengguna akan melihat produk baru langsung muncul di halaman setelah proses POST berhasil.
+
+
+
+
+
+
 
 
 
