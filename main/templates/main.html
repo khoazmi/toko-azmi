@@ -60,7 +60,7 @@
             <input type="text" id="aproduct" name="aproduct class= mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Enter Product" required>
           </div>
           <div class="mb-4">
-            <label for="description class="block text-sm font-medium text-gray-700">Description</label>
+            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
             <textarea id="description" name="description" rows="3" class="mt-1 block w-full h-52 resize-none border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Product Description" required></textarea>
           </div>
           <div class="mb-4">
@@ -101,7 +101,7 @@
     else {
         classNameString = "columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full"
         products.forEach((item) => {
-            const aproduct = DOMPurify.sanitize(item.fields.aproduct);
+            const aproduct = DOMPurify.sanitize(item.fields.name_product);
             const description= DOMPurify.sanitize(item.fields.description);
             htmlString += `
             <div class="relative break-inside-avoid">
@@ -188,15 +188,21 @@ const modal = document.getElementById('crudModal');
 
   function addProduct() {
     fetch("{% url 'main:add_product_ajax' %}", {
-      method: "POST",
-      body: new FormData(document.querySelector('#productForm')),
+        method: "POST",
+        body: new FormData(document.querySelector('#productForm')),
     })
-    .then(response => refreshProducts())
+    .then(response => {
+        if (response.ok) {
+            refreshProducts(); // Panggil untuk memperbarui daftar produk
+            hideModal(); // Tutup modal setelah penambahan berhasil
+        } else {
+            console.error("Failed to add product.");
+        }
+    })
+    .catch(error => console.error("Error:", error));
 
-    document.getElementById("productForm").reset(); 
-    document.querySelector("[data-modal-toggle='crudModal']").click();
-
-    return false;
+    document.getElementById("productForm").reset(); // Reset form setelah submit
+    return false; // Prevent default form submission
   }
   document.getElementById("submitProduct").onclick = addProduct
 </script>

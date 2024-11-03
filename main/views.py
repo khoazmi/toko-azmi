@@ -95,7 +95,7 @@ def add_product_ajax(request):
     user = request.user
 
     new_product = Product(
-        product=product, description=description,
+        name_product=product, description=description,
         price=price,
         user=user
     )
